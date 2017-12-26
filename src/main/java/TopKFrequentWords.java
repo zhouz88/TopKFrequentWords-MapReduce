@@ -7,11 +7,8 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.*;
@@ -61,7 +58,7 @@ public class TopKFrequentWords {
 
             map.put(key.toString(), sum);
         }
-
+        //only once clean up and setup by mapreduce!
         protected void cleanup(Reducer<Text, IntWritable, Text, IntWritable>.Context context) throws IOException, InterruptedException {
             PriorityQueue<Map.Entry<String, Integer>> pq = new PriorityQueue<Map.Entry<String, Integer>>(new Comparator<Map.Entry<String, Integer>>(){
                 public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
@@ -90,7 +87,6 @@ public class TopKFrequentWords {
                 context.write(new Text(e.getKey()), new IntWritable(e.getValue()));
 
         }
-
     }
 
     public static void main(String[] args) throws Exception {
